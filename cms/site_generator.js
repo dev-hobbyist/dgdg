@@ -28,7 +28,7 @@ function SiteGenerator(){
 			}
 		});
 	};
-	this.GeneratePost = function(post, category_list){
+	this.GeneratePost = function(post, category_list, site_config){
 		var showdown  = require('showdown');
 		converter = new showdown.Converter();
 
@@ -39,7 +39,10 @@ function SiteGenerator(){
 		template = template.replace('{MD2HTML}', md_html);
 
 		//TITLE
-		template = template.replace('{TITLE}', post.title);
+		template = template.replace(/{TITLE}/g, site_config.title);
+
+		//POST_TITLE
+		template = template.replace('{POST_TITLE}', post.title);
 
 		//TIME_POSTED
 		var date_posted = new Date(post.timestamp_posted);
@@ -87,21 +90,22 @@ function SiteGenerator(){
 
 				var post_list = await service.GetPostList();
 				var category_list = await service.GetCategoryList();
+				var site_config = await service.GetSiteConfig();
 
 				//index html
-				await self.GenerateIndex();
+				await self.GenerateIndex(site_config);
 
 				//categories
-				await self.GenerateCagetories(post_list, category_list);
+				await self.GenerateCagetories(post_list, category_list, site_config);
 
 				//Post
 				for(var pi=0 ; pi<post_list.length ; pi++){
 					var p = post_list[pi];
-					self.GeneratePost(p, category_list);
+					self.GeneratePost(p, category_list, site_config);
 				}
 
 				//keyword
-				await self.GenerateKeywordPages(post_list, category_list);
+				await self.GenerateKeywordPages(post_list, category_list, site_config);
 
 				resolve();
 			}catch(err){
@@ -123,7 +127,7 @@ function SiteGenerator(){
 		}
 		return input.replace('{CATEGORY_LIST_MENU}', h);
 	};
-	this.GenerateIndex = async function () {
+	this.GenerateIndex = async function (site_config) {
 		return new Promise(async function (resolve, reject) {
 			try {
 				var index_path = __dirname + `/template/index.html`;
@@ -131,6 +135,9 @@ function SiteGenerator(){
 
 				var post_list = await service.GetPostList();
 				var category_list = await service.GetCategoryList();
+
+				//TITLE
+				index_content = index_content.replace(/{TITLE}/g, site_config.title);
 
 				//CATEGORY_LIST_MENU
 				index_content = self.Update_CATEGORY_LIST_MENU('.', index_content, category_list);
@@ -168,17 +175,17 @@ function SiteGenerator(){
 
 					index_content = index_content.replace('{RECENT_POST_LIST_BY_CATEGORY}', h);
 				}
-
 				
 				fs.writeFileSync(__dirname + '/../docs/index.html', index_content);	
 
 				resolve();
 			} catch (err) {
+				console.debug('err ' + err);
 				reject('Fail GenerateIndex');
 			}
 		});
 	};
-	this.GenerateCagetories = async function (post_list, category_list) {
+	this.GenerateCagetories = async function (post_list, category_list, site_config) {
 		return new Promise(async function (resolve, reject) {
 			try {
 				var dir = __dirname + `/../docs/category/`;
@@ -187,6 +194,9 @@ function SiteGenerator(){
 				}		
 		
 				var template = fs.readFileSync(__dirname + `/template/category.html`, 'utf-8');
+
+				// TITLE
+				template = template.replace(/{TITLE}/g, site_config.title);
 
 				//CATEGORY_LIST_MENU
 				template = self.Update_CATEGORY_LIST_MENU('..', template, category_list);
@@ -221,7 +231,7 @@ function SiteGenerator(){
 			}
 		});
 	};
-	this.GenerateKeywordPages = async function (post_list, category_list) {
+	this.GenerateKeywordPages = async function (post_list, category_list, site_config) {
 		return new Promise(async function (resolve, reject) {
 			try {
 				var keyword_list = [];
@@ -266,8 +276,17 @@ function SiteGenerator(){
 				}
 
 				var template = fs.readFileSync(__dirname + `/template/keyword.html`, 'utf-8');
+
+				//TITLE
+				template = template.replace(/{TITLE}/g, site_config.title);
+
 				//CATEGORY_LIST_MENU
 				template = self.Update_CATEGORY_LIST_MENU('..', template, category_list);
+
+				var dir = __dirname + `/../docs/keyword/`;
+				if (!fs.existsSync(dir)){
+					fs.mkdirSync(dir, { recursive: true });
+				}				
 
 				for(var t=0 ; t<keyword_list.length ; t++){
 					var keyword = keyword_list[t];

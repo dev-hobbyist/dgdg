@@ -9,8 +9,10 @@ function IndexControl(){
 	this._post_list = null;
 	this._selected_post = null;
 	this._category_list = null;
+	this._site_config = null;
 
 	this.Init = function(){
+		self.GetSiteConfig();
 		self.GetPostList();
 		self.GetCategoryList();
 
@@ -23,6 +25,18 @@ function IndexControl(){
 			plugins: [codeSyntaxHighlight]
 		});	
 		return this;
+	};
+
+	this.GetSiteConfig = function(){
+		GET('/api/get_site_config', function(res){
+			if(res.ok){
+				self._site_config = res.site_config;
+				$('title').html(self._site_config.title);
+				$('#id_label_title').html(self._site_config.title);
+			}else{
+				alert(res.err);
+			}
+		});
 	};
 
 	this.OpenNewPost = function(){

@@ -2,6 +2,21 @@ const fs = require('fs');
 
 function Service(){
 	var self = this;
+	this.GetSiteConfig = async function(){
+		return new Promise(async function(resolve, reject){
+			try{
+				var site_config = {};
+				var str = fs.readFileSync(__dirname + '/../site_config.json', "utf8");
+				if(str){
+					site_config = JSON.parse(str);
+				}
+				resolve(site_config);
+			}catch(err){
+				console.debug('FAIL GetSiteConfig');
+				resolve(null);
+			}
+		});
+	};
 	this.GetPostList = async function(){
 		return new Promise(async function(resolve, reject){
 			try{
