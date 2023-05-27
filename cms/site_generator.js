@@ -82,6 +82,9 @@ function SiteGenerator(){
 	this.ExportAll = async function(){
 		return new Promise(async function(resolve, reject){
 			try{
+				fs.rmdirSync(__dirname + '/../docs/', {recursive: true, force: true});
+				fs.mkdirSync(__dirname + '/../docs/');
+
 				var post_list = await service.GetPostList();
 				var category_list = await service.GetCategoryList();
 
