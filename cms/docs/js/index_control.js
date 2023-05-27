@@ -31,7 +31,7 @@ function IndexControl(){
 		GET('/api/get_site_config', function(res){
 			if(res.ok){
 				self._site_config = res.site_config;
-				$('title').html(self._site_config.title);
+				$('title').html(self._site_config.title + ' CMS');
 				$('#id_label_title').html(self._site_config.title);
 			}else{
 				alert(res.err);
