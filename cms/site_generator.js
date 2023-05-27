@@ -117,7 +117,7 @@ function SiteGenerator(){
 			var c = category_list[i];
 			h += `
 			<span style="margin:5px">
-				<a href="${path}/category_${c.index}.html?name=${c.category}">${c.category}</a>
+				<a href="${path}/category/${c.category}.html">${c.category}</a>
 			</span>
 			`;
 		}
@@ -181,10 +181,15 @@ function SiteGenerator(){
 	this.GenerateCagetories = async function (post_list, category_list) {
 		return new Promise(async function (resolve, reject) {
 			try {
+				var dir = __dirname + `/../docs/category/`;
+				if (!fs.existsSync(dir)){
+					fs.mkdirSync(dir, { recursive: true });
+				}		
+		
 				var template = fs.readFileSync(__dirname + `/template/category.html`, 'utf-8');
 
 				//CATEGORY_LIST_MENU
-				template = self.Update_CATEGORY_LIST_MENU('.', template, category_list);
+				template = self.Update_CATEGORY_LIST_MENU('..', template, category_list);
 				
 				//Category title
 
@@ -199,13 +204,13 @@ function SiteGenerator(){
 							var p = post_list[pi];
 							if(p.category_index == c.index){
 								post_list_html += `
-								<div><a href="./posts/${p.year}/${p.month}/${p.index}.html?category=${c.category}&title=${p.title}">${p.title}</a></div>
+								<div><a href="../posts/${p.year}/${p.month}/${p.index}.html?category=${c.category}&title=${p.title}">${p.title}</a></div>
 								`;
 							}
 						}
 						html = html.replace('{POST_LIST_BY_CATEGORY}', post_list_html);
 
-						fs.writeFileSync(__dirname + `/../docs/category_${c.index}.html`, html);	
+						fs.writeFileSync(__dirname + `/../docs/category/${c.category}.html`, html);	
 					}
 
 				}
