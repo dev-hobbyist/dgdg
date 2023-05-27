@@ -33,7 +33,7 @@ function SiteGenerator(){
 		converter = new showdown.Converter();
 
 		var template = fs.readFileSync(__dirname + '/template/post.html', 'utf-8');
-		var md_path = __dirname + `/posts/${post.year}/${post.month}/${post.index}.md`;
+		var md_path = __dirname + `/../DB/${post.year}/${post.month}/${post.index}.md`;
 		var md = fs.readFileSync(md_path, 'utf-8');
 		var md_html = converter.makeHtml(md);
 		template = template.replace('{MD2HTML}', md_html);

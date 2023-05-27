@@ -116,7 +116,7 @@ router.get('/get_post_list', async function(req, res){
 router.get('/get_post', async function(req, res){
 	try{
 		console.debug('req.query.year ' + req.query.year);
-		var path = __dirname + `/posts/${req.query.year}/${req.query.month}/${req.query.index}.md`;
+		var path = __dirname + `/../DB/${req.query.year}/${req.query.month}/${req.query.index}.md`;
 		var md = fs.readFileSync(path, "utf-8");
 		console.debug('md ' + md);
 		// var post_list = await service.GetPostList();

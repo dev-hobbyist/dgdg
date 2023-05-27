@@ -20,7 +20,7 @@ function Service(){
 	this.GetPostList = async function(){
 		return new Promise(async function(resolve, reject){
 			try{
-				var path = __dirname + '/posts/_post_list.json';
+				var path = __dirname + '/../DB/_post_list.json';
 				var file_content = fs.readFileSync(path, "utf8");
 				var post_list = JSON.parse(file_content);
 				resolve(post_list);
@@ -33,7 +33,7 @@ function Service(){
 	this.SavePostList = async function(post_list){
 		return new Promise(async function(resolve, reject){
 			try{
-				var path = __dirname + '/posts/_post_list.json';
+				var path = __dirname + '/../DB/_post_list.json';
 				fs.writeFileSync(path, JSON.stringify(post_list));
 				resolve([]);
 			}catch(err){
@@ -45,12 +45,12 @@ function Service(){
 	this.SavePost = async function(year, month, index, data){
 		return new Promise(async function(resolve, reject){
 			try{
-				var dir = __dirname + `/posts/${year}/${month}`;
+				var dir = __dirname + `/../DB/${year}/${month}`;
 				if (!fs.existsSync(dir)){
 					fs.mkdirSync(dir, { recursive: true });
 				}
 
-				var path = __dirname + `/posts/${year}/${month}/${index}.md`;
+				var path = __dirname + `/../DB/${year}/${month}/${index}.md`;
 				fs.writeFileSync(path, data.md);
 				resolve();
 			}catch(err){
@@ -63,7 +63,7 @@ function Service(){
 	this.GetCategoryList = async function(){
 		return new Promise(async function(resolve, reject){
 			try{
-				var path = __dirname + '/posts/_category_list.json';
+				var path = __dirname + '/../DB/_category_list.json';
 				var file_content = fs.readFileSync(path, "utf8");
 				var category_list = JSON.parse(file_content);
 				resolve(category_list);
@@ -76,7 +76,7 @@ function Service(){
 	this.SaveCategoryList = async function(category_list){
 		return new Promise(async function(resolve, reject){
 			try{
-				var path = __dirname + '/posts/_category_list.json';
+				var path = __dirname + '/../DB/_category_list.json';
 				fs.writeFileSync(path, JSON.stringify(category_list));
 				resolve();
 			}catch(err){
