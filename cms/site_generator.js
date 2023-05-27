@@ -41,18 +41,33 @@ function SiteGenerator(){
 		//TITLE
 		template = template.replace('{TITLE}', post.title);
 
+		//TIME_POSTED
 		var date_posted = new Date(post.timestamp_posted);
 		var date_posted_format = date_posted.toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'});
 		template = template.replace('{TIME_POSTED}', date_posted_format);
 
+		//TIME_UPDATED
 		var date_updated = new Date(post.timestamp_updated);
 		var date_updated_format = date_updated.toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'});
-
 		if(date_posted_format == date_updated_format){
 			template = template.replace('{TIME_UPDATED}', '');
 		}else{
 			date_updated_format = 'Updated at ' + date_updated_format
 			template = template.replace('{TIME_UPDATED}', date_updated_format);
+		}
+
+		//KEYWORD
+		{
+			var h = `Keywords : `;
+			var keyword_arr = post.keyword.split(',');
+			for(var i=0 ; i<keyword_arr.length ; i++){
+				var keyword = keyword_arr[i].trim();
+				var keyword_low_case = keyword.toLowerCase();
+				h += `
+				<a href="../../../keyword/${keyword_low_case}.html">${keyword}</a>
+				`;
+			}
+			template = template.replace('{KEYWORD}', h);
 		}
 
 		//CATEGORY_LIST_MENU
@@ -72,6 +87,8 @@ function SiteGenerator(){
 
 				//index html
 				await self.GenerateIndex();
+
+				//categories
 				await self.GenerateCagetories(post_list, category_list);
 
 				//Post
@@ -79,6 +96,9 @@ function SiteGenerator(){
 					var p = post_list[pi];
 					self.GeneratePost(p, category_list);
 				}
+
+				//keyword
+				await self.GenerateKeywordPages(post_list, category_list);
 
 				resolve();
 			}catch(err){
@@ -190,6 +210,74 @@ function SiteGenerator(){
 				resolve();
 			} catch (err) {
 				reject('Fail GenerateCagetories');
+			}
+		});
+	};
+	this.GenerateKeywordPages = async function (post_list, category_list) {
+		return new Promise(async function (resolve, reject) {
+			try {
+				var keyword_list = [];
+				var keyword_page_list = [];
+
+				for(var i=0 ; i<post_list.length ; i++){
+					var post = post_list[i];
+					var keyword_str = post.keyword;
+					var keyword_arr = keyword_str.split(',');
+					for(var k=0 ; k<keyword_arr.length ; k++){
+						var keyword = keyword_arr[k].trim();
+						keyword = keyword.toLowerCase();
+
+						var keyword_found = false;
+						for(var t=0 ; t<keyword_list.length ; t++){
+							if(keyword_list[t] == keyword){
+								keyword_found = true;
+								break;
+							}
+						}
+						if(keyword_found == false){
+							keyword_list.push(keyword);
+							keyword_page_list[keyword] = [];
+						}
+
+						var category = '';
+						for(var c=0 ; c<category_list.length ; c++){
+							if(category_list[c].index == post.category_index){
+								category = category_list[c].category;
+								break;
+							}
+						}
+						keyword_page_list[keyword].push({
+							year: post.year,
+							month: post.month,
+							index: post.index,
+							title: post.title,
+							category: category,
+							timestamp_updated: post.timestamp_updated
+						});
+					}
+				}
+
+				var template = fs.readFileSync(__dirname + `/template/keyword.html`, 'utf-8');
+				//CATEGORY_LIST_MENU
+				template = self.Update_CATEGORY_LIST_MENU('..', template, category_list);
+
+				for(var t=0 ; t<keyword_list.length ; t++){
+					var keyword = keyword_list[t];
+					var html = template.replace('{KEYWORD}', keyword);
+					var post_list_html = '';
+					for(var p=0 ; p<keyword_page_list[keyword].length ; p++){
+						var post = keyword_page_list[keyword][p];						
+						post_list_html += `
+						<div><a href="../posts/${post.year}/${post.month}/${post.index}.html?category=${post.category}&title=${post.title}">${post.title}</a></div>
+						`;
+						html = html.replace('{POST_LIST_BY_KEYWORD}', post_list_html);
+					}
+					fs.writeFileSync(__dirname + `/../docs/keyword/${keyword}.html`, html);	
+				}
+				resolve();
+			} catch (err) {
+				console.debug('err ' + err);
+				reject('Fail GenerateKeywordPages');
 			}
 		});
 	};

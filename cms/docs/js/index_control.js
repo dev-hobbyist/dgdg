@@ -46,7 +46,8 @@ function IndexControl(){
 	};
 
 	this.Save = function(){
-		var title = $('#id_title').val();
+		var title = $('#id_title').val().trim();
+		var keyword = $('#id_keyword').val().trim();
 		var md = self._editor.getMarkdown();
 		var category = $('#id_select_category').val();
 		var category_index = 0;
@@ -62,6 +63,7 @@ function IndexControl(){
 			var data = {
 				title: title,
 				category_index: category_index,
+				keyword: keyword,
 				md: md
 			};	
 			url = '/api/save_post';
@@ -72,6 +74,7 @@ function IndexControl(){
 				month: self._selected_post.month,
 				title: title,
 				category_index: category_index,
+				keyword: keyword,
 				md: md
 			};	
 			url = '/api/update_post';
@@ -149,6 +152,7 @@ function IndexControl(){
 		GET(`/api/get_post?year=${post.year}&month=${post.month}&index=${post.index}`, function(res){
 			if(res.ok){
 				$('#id_title').val(post.title);
+				$('#id_keyword').val(post.keyword);
 				self._editor.setMarkdown(res.md);
 			}else{
 				alert(res.err);

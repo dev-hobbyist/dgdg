@@ -24,6 +24,7 @@ router.post('/save_post', async function(req, res){
 			index: post_index,
 			title: data.title,
 			category_index: data.category_index,
+			keyword: keyword,
 			timestamp_posted: timestamp,
 			timestamp_updated: timestamp,
 		});
@@ -50,6 +51,7 @@ router.post('/update_post', async function(req, res){
 		var year = data.year;
 		var month = data.month;
 		var category_index = data.category_index;
+		var keyword = data.keyword;
 		var timestamp = new Date().getTime();
 
 		await service.SavePost(year, month, index, data);
@@ -59,6 +61,7 @@ router.post('/update_post', async function(req, res){
 			if(post_list[i].index == index){
 				post_list[i].title = title;
 				post_list[i].category_index = category_index;
+				post_list[i].keyword = keyword;
 				post_list[i].timestamp_updated = timestamp;
 				break;
 			}
