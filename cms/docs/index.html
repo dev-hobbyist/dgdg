@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<title>DH CMS</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" type="text/css" href="lib/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+	<link href="/lib/fontawesome-free-5.10.1-web/css/fontawesome.css" rel="stylesheet">
+	<link href="/lib/fontawesome-free-5.10.1-web/css/brands.css" rel="stylesheet">
+	<link href="/lib/fontawesome-free-5.10.1-web/css/solid.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css" />
+	<link rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css" />
+
+	<script type="text/javascript" src="lib/jquery-3.4.1.min.js"></script>
+	<script type="text/javascript" src="lib/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+
+	<!-- Editor -->
+	<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+	<!-- Editor's Plugin -->
+	<script src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js"></script>
+
+</head>
+<body>
+
+	<div class="container-fluid">
+		<div class="row border-bottom">
+			<div class="col-6">
+				<H2>DH CMS</H2>
+			</div>
+			<div class="col-3" id="id_msg" style="color: red;"></div>
+			<div class="col-3 text-right">
+				<button type="button" class="btn btn-sm btn-primary my-2" onClick="window._index_control.ExportAll()">Export All</button>
+				<button type="button" class="btn btn-sm btn-primary" onclick="window._index_control.OpenNewPost()">New Post</button>
+				<button type="button" class="btn btn-sm btn-primary" onClick="window._index_control.Save()">Save</button>
+				<button type="button" class="btn btn-sm btn-primary" onClick="window._index_control.Export()">Export</button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-4">
+				<div class="border small">
+					Category
+					<button type="button" class="btn btn-sm btn-primary" onClick="window._index_control.AddCatetory()">+</button>
+				</div>
+				<div class="col-12 small" id="id_category_list"></div>
+				<div class="border small">Posts</div>
+				<div class="col-12" id="id_post_list"></div>
+			</div>
+			<div class="col-8">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-9">
+							<input type="text" class="form-control small" id="id_title" placeholder="Title">
+						</div>
+						<div class="col-3 text-right">
+							<div class="my-2 small">Category <select id="id_select_category"></select></div>
+						</div>
+					</div>
+					<div id="id_editor"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/index_control.js"></script>
