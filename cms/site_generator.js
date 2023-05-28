@@ -76,13 +76,16 @@ function SiteGenerator(){
 		//CATEGORY_LIST_MENU
 		template = self.Update_CATEGORY_LIST_MENU('../../..', template, category_list);
 
+		var title_1 = post.title.replace(/ /g, '-');
+		var file_name = `${post.index}_${title_1}.html`;
 		var dir = __dirname + `/../docs/posts/${post.year}/${post.month}/`;
 		if (!fs.existsSync(dir)){
 			fs.mkdirSync(dir, { recursive: true });
 		}		
-		fs.writeFileSync(dir + `/${post.index}.html`, template);
+		fs.writeFileSync(dir + `/${file_name}`, template);
 	};
 	this.ExportAll = async function(){
+		console.debug('Export All ');
 		return new Promise(async function(resolve, reject){
 			try{
 				fs.rmdirSync(__dirname + '/../docs/', {recursive: true, force: true});
@@ -158,10 +161,12 @@ function SiteGenerator(){
 								var date = new Date(p.timestamp_posted);
 								var date_format = date.toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'});
 
+								var title_1 = p.title.replace(/ /g, '-');
+								var post_file_name = `${p.index}_${title_1}.html`;
 								h += `
 								<div class="px-3 py-1 d-flex">
 									<div class="w-100">
-										<a href="./posts/${p.year}/${p.month}/${p.index}.html?category=${c.category}&title=${p.title}">${p.title}</a>
+										<a href="./posts/${p.year}/${p.month}/${post_file_name}">${p.title}</a>
 									</div>
 									<div class="w-100 text-right" style="font-size:0.8em; color:gray">
 										${date_format}
@@ -212,9 +217,11 @@ function SiteGenerator(){
 						var post_list_html = '';
 						for(var pi=0 ; pi<post_list.length ; pi++){
 							var p = post_list[pi];
+							var title_1 = p.title.replace(/ /g, '-');
+							var file_name = `${p.index}_${title_1}.html`;
 							if(p.category_index == c.index){
 								post_list_html += `
-								<div><a href="../posts/${p.year}/${p.month}/${p.index}.html?category=${c.category}&title=${p.title}">${p.title}</a></div>
+								<div><a href="../posts/${p.year}/${p.month}/${file_name}">${p.title}</a></div>
 								`;
 							}
 						}
@@ -293,9 +300,12 @@ function SiteGenerator(){
 					var html = template.replace('{KEYWORD}', keyword);
 					var post_list_html = '';
 					for(var p=0 ; p<keyword_page_list[keyword].length ; p++){
-						var post = keyword_page_list[keyword][p];						
+						var post = keyword_page_list[keyword][p];
+
+						var title_1 = post.title.replace(/ /g, '-');
+						var file_name = `${post.index}_${title_1}.html`;
 						post_list_html += `
-						<div><a href="../posts/${post.year}/${post.month}/${post.index}.html?category=${post.category}&title=${post.title}">${post.title}</a></div>
+						<div><a href="../posts/${post.year}/${post.month}/${file_name}">${post.title}</a></div>
 						`;
 						html = html.replace('{POST_LIST_BY_KEYWORD}', post_list_html);
 					}

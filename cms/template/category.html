@@ -18,7 +18,7 @@
 <body>
 	<div class="container">
 		<div class="row">
-			<div class="col-12 text-center py-3"><h3>{TITLE}</h3></div>
+			<div class="col-12 text-center py-3"><font style="font-size: 3em; font-weight: bold;">{TITLE}</font></div>
 		</div>
 		<div class="row">
 			<div class="col-12 text-center border-bottom">
@@ -31,8 +31,11 @@
 				Category : {CATEGORY_NAME}
 			</div>
 		</div>
-
-		{POST_LIST_BY_CATEGORY}
+		<div class="row">
+			<div class="col-12">
+				{POST_LIST_BY_CATEGORY}
+			</div>
+		</div>
 	</div>
 </body>
 </html>
