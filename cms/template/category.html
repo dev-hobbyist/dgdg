@@ -22,20 +22,25 @@
 		</div>
 		<div class="row">
 			<div class="col-12 text-center border-bottom">
-				<span style="margin:5px"><a href="/">Home</a></span>
 				{CATEGORY_LIST_MENU}
 			</div>
 		</div>
+		<div style="margin: 20px;"></div>
 		<div class="row">
-			<div class="col-12">
-				Category : {CATEGORY_NAME}
+			<div class="col-12" style="color: gray;">
+				Home >
+				Categories >
+				{CATEGORY_NAME}
 			</div>
 		</div>
+		<div style="margin: 20px;"></div>
 		<div class="row">
 			<div class="col-12">
-				{POST_LIST_BY_CATEGORY}
+				<h5>{CATEGORY_NAME}</h5>
 			</div>
 		</div>
+		<div style="margin: 20px;"></div>
+		{POST_LIST_BY_CATEGORY}
 	</div>
 </body>
 </html>

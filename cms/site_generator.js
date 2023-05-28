@@ -120,6 +120,7 @@ function SiteGenerator(){
 	//CATEGORY_LIST_MENU
 	this.Update_CATEGORY_LIST_MENU = function(path, input, category_list){
 		var h = '';
+		h += `<span style="margin:5px"><a href="${path}/index.html">Home</a></span>`;
 		for(var i=0 ; i<category_list.length ; i++){
 			var c = category_list[i];
 			h += `
@@ -211,7 +212,7 @@ function SiteGenerator(){
 				{//POST_LIST_BY_CATEGORY
 					for(var ci=0 ; ci<category_list.length ; ci++){
 						var c = category_list[ci];
-						var html = template.replace('{CATEGORY_NAME}', c.category);
+						var html = template.replace(/{CATEGORY_NAME}/g, c.category);
 						// var html = template;
 
 						var post_list_html = '';
@@ -219,9 +220,20 @@ function SiteGenerator(){
 							var p = post_list[pi];
 							var title_1 = p.title.replace(/ /g, '-');
 							var file_name = `${p.index}_${title_1}.html`;
+
+							var date_updated = new Date(p.timestamp_updated);
+							var date_updated_format = date_updated.toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'});
+					
 							if(p.category_index == c.index){
 								post_list_html += `
-								<div><a href="../posts/${p.year}/${p.month}/${file_name}">${p.title}</a></div>
+								<div class="row">
+									<div class="col-9">
+										<a href="../posts/${p.year}/${p.month}/${file_name}">${p.title}</a>
+									</div>
+									<div class="col-3 text-right">
+										${date_updated_format}
+									</div>
+								</div>
 								`;
 							}
 						}
